@@ -1,6 +1,6 @@
 FROM golang as runtime
 
-COPY source source
+COPY . source
 
 WORKDIR source
 EXPOSE 9100
