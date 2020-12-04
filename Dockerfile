@@ -3,6 +3,6 @@ FROM golang as runtime
 COPY . source
 
 WORKDIR source/bin
-CMD chown +x release
+CMD chmod +x release
 EXPOSE 9100
 RUN ["./release"]
