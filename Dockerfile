@@ -5,4 +5,4 @@ COPY . source
 WORKDIR source/bin
 CMD chown +x release
 EXPOSE 9100
-RUN ["bin/release"]
+RUN ["release"]
