@@ -1,4 +1,4 @@
 FROM golang as runtime
-WORKDIR bin
+WORKDIR source
 EXPOSE 9100
-CMD["release","run"]
+CMD["bin/release","run"]
