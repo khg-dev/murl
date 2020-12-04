@@ -2,7 +2,7 @@ FROM golang as runtime
 
 COPY . source
 
-WORKDIR source/bin
+WORKDIR source
 CMD chmod +x release
 EXPOSE 9100
-RUN ["./release"]
+CMD ["./release"]
