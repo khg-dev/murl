@@ -4,4 +4,4 @@ COPY source source
 
 WORKDIR source
 EXPOSE 9100
-CMD["bin/release","run"]
+CMD["bin/release"]
