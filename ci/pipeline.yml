@@ -1,0 +1,103 @@
+resource_types:
+  - name: k8s
+    type: docker-image
+    source:
+      repository: jmkarthik/concourse-kubectl-resource
+      tag: latest
+
+resources:
+  - name: src
+    type: git
+    source:
+      uri: ((git-url))
+      branch: ((git-branch))
+  - name: release-bucket
+    type: s3
+    source:
+      bucket: ((s3-bucket))
+      versioned_file: releases/release
+      region_name: ((s3-region))
+      access_key_id: ((s3-access-key-id))
+      secret_access_key: ((s3-secret-access-key))
+  - name: murl-image
+    type: registry-image
+    source:
+      repository: ((ecr-registry-url))/murl:latest
+      username: ((ci-user))
+      password: ((ci-pw))
+  - name: dev-k8s
+    type: k8s
+    source:
+      api_server_url: ((k8s-api-server-url))
+      namespace: ((k8s-namespace))
+      certificate_authority_data: ((k8s-cad))
+      token: ((k8s-token))
+jobs:
+  - name: build-and-push
+    public: true
+    plan:
+      - get: src
+        trigger: true
+      - task: build-binary
+        privileged: true
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: golang
+          inputs:
+            - name: src
+              path: source
+          outputs:
+            - name: release
+              path: output
+          run:
+            path: sh
+            args:
+              - -exc
+              - |
+                export GOPATH="/source"
+                cd source
+                go get -d ./...
+                go build -o ../output/release
+      - put: release-bucket
+        params:
+          file: release/release
+
+  - name: build-oci-image
+    plan:
+       - get: release-bucket
+         trigger: true
+       - get: src
+       - task: create-oci-image
+         privileged: true
+         config:
+           platform: linux
+           image_resource:
+             type: registry-image
+             source:
+               repository: vito/oci-build-task
+           inputs:
+             - name: src
+               path: source
+             - name: release-bucket
+               path: source
+           outputs:
+             - name: image
+           params:
+             CONTEXT: source
+           run:
+             path: build
+       - put: murl-image
+         params:
+           image: image/image.tar
+
+  - name: pull-and-deploy
+    plan:
+      - get: src
+      - get: murl-image
+        trigger: true
+      - put: dev-k8s
+        params:
+          file: src/k8s

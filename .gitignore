@@ -2,3 +2,5 @@
 *.exe
 *.mod
 *.sum
+*.tar
+credentials.yml
