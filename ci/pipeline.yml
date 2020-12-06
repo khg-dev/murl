@@ -33,12 +33,12 @@ resources:
       certificate_authority_data: ((k8s-cad))
       token: ((k8s-token))
 jobs:
-  - name: test-build-and-push
+  - name: build-and-push
     public: true
     plan:
       - get: src
         trigger: true
-      - task: build-binary
+      - task: test-build-binary
         privileged: true
         config:
           platform: linux
