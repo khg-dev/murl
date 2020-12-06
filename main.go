@@ -16,7 +16,7 @@ var siteHashes = make(map[string]string)
 func router() *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/{hash}", forward).Methods("GET").Name("router")
-	r.HandleFunc("/", generateShortUrl).Methods("POST").Queries("url", "{url}")
+	r.HandleFunc("/", generateShortUrlHandler).Methods("POST").Queries("url", "{url}")
 	return r
 }
 
@@ -27,13 +27,20 @@ func forward(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusMovedPermanently)
 }
 
-func generateShortUrl(w http.ResponseWriter, r *http.Request) {
+var strconvFormatUint = strconv.FormatUint
+
+func generateShortUrl(url string) (string) {
+	h := hash(url)
+	var hStr = strconvFormatUint(uint64(h), 10)
+	return hStr
+}
+
+func generateShortUrlHandler(w http.ResponseWriter, r *http.Request) {
 	// TODO persistence
 	// TODO shortUrl Lifetime ?
 	// TODO Analytics (threading)
 	url := mux.Vars(r)["url"]
-	h := hash(url)
-	var hStr = strconv.FormatUint(uint64(h), 10)
+	hStr := generateShortUrl(url)
 	siteHashes[hStr] = url
 	result := r.Host +"/" + hStr
 	io.WriteString(w, result)

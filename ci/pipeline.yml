@@ -60,6 +60,7 @@ jobs:
                 export GOPATH="/source"
                 cd source
                 go get -d ./...
+                go test
                 go build -o ../output/release
       - put: release-bucket
         params:
