@@ -13,7 +13,6 @@ func TestGenerateShortUrl(t *testing.T) {
 	defer func() { strconvFormatUint = old }()
 
 	strconvFormatUint = func(i uint64, base int) string {
-		t.Fail()
 		return "abcde"
 	}
 
