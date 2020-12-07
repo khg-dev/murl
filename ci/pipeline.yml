@@ -33,12 +33,12 @@ resources:
       certificate_authority_data: ((k8s-cad))
       token: ((k8s-token))
 jobs:
-  - name: build-and-push
+  - name: build-test-and-push-to-s3
     public: true
     plan:
       - get: src
         trigger: true
-      - task: test-build-binary
+      - task: build-and-test
         privileged: true
         config:
           platform: linux
@@ -59,8 +59,9 @@ jobs:
               - |
                 export GOPATH="/source"
                 cd source
-                go get -d ./...
+                go get -d -t -v ./...
                 go build -o ../output/release
+                go test
       - put: release-bucket
         params:
           file: release/release
