@@ -83,7 +83,7 @@ jobs:
              - name: src
                path: source
              - name: release-bucket
-               path: source
+               path: bin
            outputs:
              - name: image
            params:

@@ -1,8 +1,8 @@
 FROM golang as runtime
 
-COPY source source
+COPY bin bin
 
-WORKDIR source
+WORKDIR bin
 CMD chmod +x release
 EXPOSE 9100
 CMD ["./release"]
