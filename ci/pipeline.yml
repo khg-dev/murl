@@ -87,7 +87,7 @@ jobs:
            outputs:
              - name: image
            params:
-             DOCKERFILE: source/ci/Dockerfile
+             DOCKERFILE: source/Dockerfile
            run:
              path: build
        - put: murl-image
