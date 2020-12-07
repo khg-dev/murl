@@ -1,6 +1,6 @@
 FROM golang as runtime
 
-COPY . source
+COPY source source
 
 WORKDIR source
 CMD chmod +x release
