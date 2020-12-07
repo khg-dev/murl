@@ -81,12 +81,13 @@ jobs:
                repository: vito/oci-build-task
            inputs:
              - name: src
+               path: source
              - name: release-bucket
                path: bin
            outputs:
              - name: image
            params:
-             CONTEXT: src
+             CONTEXT: source
            run:
              path: build
        - put: murl-image
