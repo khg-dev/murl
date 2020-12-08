@@ -1,4 +1,4 @@
-FROM golang as runtime
+FROM ubuntu as runtime
 
 COPY bin/release /usr/bin
 
