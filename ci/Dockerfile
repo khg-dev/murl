@@ -5,4 +5,3 @@ RUN chmod +x /usr/bin/murl
 
 EXPOSE 9100
 CMD ["/usr/bin/murl"]
- 
