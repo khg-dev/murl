@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: murl-deployment
+  labels:
+    app: murl
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: murl
+  template:
+    metadata:
+      labels:
+        app: murl
+    spec:
+      containers:
+        - name: murl
+          image: 679101398422.dkr.ecr.us-east-2.amazonaws.com/khg-dev
+          ports:
+            - containerPort: 80

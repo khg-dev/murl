@@ -2,8 +2,8 @@ resource_types:
   - name: k8s
     type: docker-image
     source:
-      repository: jmkarthik/concourse-kubectl-resource
-      tag: latest
+      repository: zlabjp/kubernetes-resource
+      tag: "1.17"
 
 resources:
   - name: src
@@ -20,18 +20,19 @@ resources:
       access_key_id: ((s3-access-key-id))
       secret_access_key: ((s3-secret-access-key))
   - name: murl-image
-    type: registry-image
+    type: docker-image
     source:
-      repository: ((ecr-registry-url))/murl:latest
-      username: ((ci-user))
-      password: ((ci-pw))
-  - name: dev-k8s
+      repository: ((ecr-registry-url))
+      aws_access_key_id: ((ecr-aki))
+      aws_secret_access_key: ((ecr-sak))
+      aws_region: ((ecr-region))
+  - name: khg-k8s
     type: k8s
     source:
-      api_server_url: ((k8s-api-server-url))
+      server: ((k8s-api-server-url))
       namespace: ((k8s-namespace))
-      certificate_authority_data: ((k8s-cad))
-      token: ((k8s-token))
+      certificate_authority: ((k8s-cad))
+      kubeconfig: ((k8s-kube-conf)))
 jobs:
   - name: build-test-and-push-to-s3
     public: true
@@ -81,24 +82,23 @@ jobs:
                repository: vito/oci-build-task
            inputs:
              - name: src
-               path: source
              - name: release-bucket
                path: bin
            outputs:
              - name: image
            params:
-             CONTEXT: source
+             DOCKERFILE: src/Dockerfile
            run:
              path: build
        - put: murl-image
          params:
-           image: image/image.tar
+           import_file: image/image.tar
 
   - name: pull-and-deploy
     plan:
       - get: src
       - get: murl-image
         trigger: true
-      - put: dev-k8s
+      - put: khg-k8s
         params:
-          file: src/k8s
+          kubectl: apply -f src/k8s
