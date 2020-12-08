@@ -1,10 +1,8 @@
 FROM ubuntu as runtime
 
-COPY bin/release /usr/bin
+COPY bin/murl /usr/bin
+RUN chmod +x /usr/bin/murl
 
-
-RUN chmod +x /usr/bin/release
 EXPOSE 9100
-
-CMD ["/usr/bin/release"]
+CMD ["/usr/bin/murl"]
  

@@ -1,5 +1,4 @@
 .idea/*
-*.mod
-*.sum
 credentials.yml
+murl.exe
 murl

@@ -15,7 +15,7 @@ resources:
     type: s3
     source:
       bucket: ((s3-bucket))
-      versioned_file: releases/release
+      versioned_file: releases/murl
       region_name: ((s3-region))
       access_key_id: ((s3-access-key-id))
       secret_access_key: ((s3-secret-access-key))
@@ -65,7 +65,7 @@ jobs:
                 go test
       - put: release-bucket
         params:
-          file: release/release
+          file: release/murl
 
   - name: build-oci-image
     plan:
