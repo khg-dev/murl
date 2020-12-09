@@ -12,6 +12,7 @@ type HashGenerator interface {
 }
 
 func (h *Hasher) GenerateHashFromURL(url string) string {
+	logger.Printf("Attempting to generate hash for url [%s]", url)
 	return strconv.FormatUint(uint64(h.HashString(url)), 10)
 }
 
