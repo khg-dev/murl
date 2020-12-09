@@ -4,10 +4,12 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
 var siteHashes = make(map[string]string)
+var logger = log.New(os.Stdout, "murl-http: ", log.LstdFlags)
 
 // Route declaration
 func router() *mux.Router {
@@ -20,12 +22,15 @@ func router() *mux.Router {
 
 // Initiate web server
 func main() {
+	logger.Print("Starting up server...")
 	router := router()
+	logger.Print("Router created successfully...")
 	srv := &http.Server{
 		Handler:      router,
 		Addr:         "127.0.0.1:9100",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
+		ErrorLog:     logger,
 	}
-	log.Fatal(srv.ListenAndServe())
+	log.Print(srv.ListenAndServe())
 }
