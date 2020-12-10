@@ -1,4 +1,4 @@
-FROM ubuntu as runtime
+FROM ubuntu
 
 COPY bin/murl /usr/bin
 RUN echo $'#!/bin/sh \n\
