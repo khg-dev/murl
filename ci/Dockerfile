@@ -1,2 +1,2 @@
-FROM ubuntu
+FROM centos
 CMD ["echo", "Hello!"]
