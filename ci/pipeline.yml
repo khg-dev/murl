@@ -67,32 +67,12 @@ jobs:
         params:
           file: release/murl
 
-  - name: build-oci-image
+  - name: build-image
     plan:
-       - get: release-bucket
-         trigger: true
-       - get: src
-       - task: create-oci-image
-         privileged: true
-         config:
-           platform: linux
-           image_resource:
-             type: registry-image
-             source:
-               repository: vito/oci-build-task
-           inputs:
-             - name: src
-             - name: release-bucket
-               path: bin
-           outputs:
-             - name: image
-           params:
-             DOCKERFILE: src/ci/Dockerfile
-           run:
-             path: build
-       - put: murl-image
-         params:
-           import_file: image/image.tar
+     - get: src
+     - get: release-bucket
+     - put: murl-image
+       params: {build: src/ci}
 
   - name: pull-and-deploy
     plan:
