@@ -2,8 +2,6 @@ FROM ubuntu as runtime
 
 COPY bin/murl /usr/bin
 WORKDIR /usr/bin
-RUN ls -la
-RUN chmod +x /usr/bin/murl1
-
+RUN chmod +x murl
 EXPOSE 9100
-CMD ["/usr/bin/murl"]
+CMD ["./murl"]
