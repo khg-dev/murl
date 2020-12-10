@@ -1,8 +1,9 @@
 FROM ubuntu as runtime
 
 COPY bin/murl /usr/bin
-WORKDIR /usr/bin
-RUN chmod 777 murl
+RUN echo $'#!/bin/sh \n\
+/usr/bin/murl' > run.sh
+RUN chmod 777 run.sh /usr/bin/murl
 RUN ls -la
 EXPOSE 9100
-CMD murl
+CMD /usr/bin/murl
