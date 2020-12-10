@@ -69,6 +69,8 @@ jobs:
   - name: build-image
     plan:
      - get: src
+     - get: murl-bucket
+       trigger: true
      - put: murl-image
        params: {build: src/ci}
 
