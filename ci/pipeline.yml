@@ -11,7 +11,7 @@ resources:
     source:
       uri: ((git-url))
       branch: ((git-branch))
-  - name: release-bucket
+  - name: murl-bucket
     type: s3
     source:
       bucket: ((s3-bucket))
@@ -51,8 +51,7 @@ jobs:
             - name: src
               path: source
           outputs:
-            - name: release
-              path: output
+            - name: source
           run:
             path: sh
             args:
@@ -61,16 +60,15 @@ jobs:
                 export GOPATH="/source"
                 cd source
                 go get -d -t -v ./...
-                go build -o ../output/release
+                go build
                 go test
-      - put: release-bucket
+      - put: murl-bucket
         params:
-          file: release/murl
+          file: source/murl
 
   - name: build-image
     plan:
      - get: src
-     - get: release-bucket
      - put: murl-image
        params: {build: src/ci}
 
