@@ -4,4 +4,4 @@ COPY bin/murl /usr/bin
 WORKDIR /usr/bin
 RUN chmod +x murl
 EXPOSE 9100
-CMD murl
+CMD ["/bin/bash", "murl"]
