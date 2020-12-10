@@ -6,4 +6,4 @@ RUN echo $'#!/bin/sh \n\
 RUN chmod 777 run.sh /usr/bin/murl
 RUN ls -la
 EXPOSE 9100
-CMD /run.sh
+ENTRYPOINT /run.sh
