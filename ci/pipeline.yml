@@ -66,6 +66,35 @@ jobs:
           file: source/murl
           acl: public-read
 
+  - name: static-analysis
+    public: true
+    plan:
+      - get: src
+        trigger: true
+        passed:
+          - build-test-and-push-to-s3
+      - task: staticcheck
+        privileged: true
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: golang
+          inputs:
+            - name: src
+              path: go/src/github.com/khg-dev/murl
+          run:
+            path: sh
+            args:
+              - -exc
+              - |
+                cd go
+                export GOPATH=$PWD
+                go get github.com/stretchr/testify/assert
+                go get honnef.co/go/tools/cmd/staticcheck
+                go get github.com/gorilla/mux
+                ./bin/staticcheck github.com/khg-dev/murl
   - name: build-image
     plan:
      - get: src
@@ -79,6 +108,8 @@ jobs:
   - name: pull-and-deploy
     plan:
       - get: src
+        passed:
+          - static-analysis
       - get: murl-image
         trigger: true
         passed:
