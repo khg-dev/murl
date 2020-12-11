@@ -28,8 +28,10 @@ resources:
   - name: khg-k8s
     type: k8s
     source:
-      namespace: default
-      kubeconfig: ((kube-conf)))
+      server: ((k8s-server))
+      namespace: ((k8s-namespace))
+      token: ((k8s-token))
+      certificate_authority: ((k8s-cert))
 jobs:
   - name: build-test-and-push-to-s3
     public: true
