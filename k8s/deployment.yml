@@ -21,7 +21,7 @@ spec:
         app: murl
     spec:
       containers:
-      - image: 679101398422.dkr.ecr.us-east-2.amazonaws.com/khg-dev
+      - image: registry.digitalocean.com/khg-dev/murl:latest
         imagePullPolicy: Always
         name: murl
         ports:
