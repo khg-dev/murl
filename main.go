@@ -34,7 +34,3 @@ func main() {
 	}
 	log.Print(srv.ListenAndServe())
 }
-
-func test(){
-
-}

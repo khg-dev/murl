@@ -38,6 +38,8 @@ jobs:
     plan:
       - get: src
         trigger: true
+        passed:
+          - static-analysis
       - task: build-and-test
         privileged: true
         config:
@@ -71,8 +73,6 @@ jobs:
     plan:
       - get: src
         trigger: true
-        passed:
-          - build-test-and-push-to-s3
       - task: staticcheck
         privileged: true
         config:
@@ -108,8 +108,6 @@ jobs:
   - name: pull-and-deploy
     plan:
       - get: src
-        passed:
-          - static-analysis
       - get: murl-image
         trigger: true
         passed:
