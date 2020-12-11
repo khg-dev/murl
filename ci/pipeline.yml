@@ -22,17 +22,14 @@ resources:
   - name: murl-image
     type: docker-image
     source:
-      repository: ((ecr-registry-url))
-      aws_access_key_id: ((ecr-aki))
-      aws_secret_access_key: ((ecr-sak))
-      aws_region: ((ecr-region))
+      repository: ((registry-url))/murl
+      username: ((registry-user))
+      password: ((registry-pw))
   - name: khg-k8s
     type: k8s
     source:
-      server: ((k8s-api-server-url))
-      namespace: ((k8s-namespace))
-      certificate_authority: ((k8s-cad))
-      kubeconfig: ((k8s-kube-conf)))
+      namespace: default
+      kubeconfig: ((kube-conf)))
 jobs:
   - name: build-test-and-push-to-s3
     public: true
@@ -72,6 +69,8 @@ jobs:
      - get: src
      - get: murl-bucket
        trigger: true
+       passed:
+         - build-test-and-push-to-s3
      - put: murl-image
        params: {build: src/ci}
 
@@ -80,6 +79,9 @@ jobs:
       - get: src
       - get: murl-image
         trigger: true
+        passed:
+          - build-image
       - put: khg-k8s
         params:
           kubectl: apply -f src/k8s
+          wait_until_ready_selector: app=murl
