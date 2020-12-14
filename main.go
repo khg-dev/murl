@@ -27,7 +27,7 @@ func main() {
 	logger.Print("Router created successfully...")
 	srv := &http.Server{
 		Handler:      router,
-		Addr:         "127.0.0.1:9100",
+		Addr:         ":8080",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 		ErrorLog:     logger,
